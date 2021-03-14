@@ -8,24 +8,26 @@ from PIL import Image, ImageStat
 def processVideo(url):
     filepath = downloadVideo(url)
     lums = analyseVideoLuminance(filepath)
-    print (lums)
     return None
+
 
 def downloadVideo(url): 
     filename = getHash(url)
     filepath = constants.VIDEO_DIRECTORY + "/" + filename
     
     if os.path.exists(filepath + ".mp4"):
-        return filepath
+        return filepath + ".mp4"
 
     yt = YouTube(url)
     stream = yt.streams.first()
     stream.download(constants.VIDEO_DIRECTORY, filename)
     return filepath+".mp4"
 
+
 def getHash(s):
     hash_object = hashlib.md5(s.encode())
     return hash_object.hexdigest()
+
 
 def analyseVideoLuminance(filepath):
     lums = []
