@@ -14,30 +14,26 @@ client = AnomalyDetectorClient(AzureKeyCredential(SUBSCRIPTION_KEY), ANOMALY_DET
 def getAnomalies(lums):
     series = []
     timestamps = []
+    
     for i in range(1,len(lums)+1):
-        timestamps.append(datetime.datetime.fromtimestamp(i).isoformat()+",")
+        timestamps.append(datetime.datetime.fromtimestamp(i).isoformat()+"Z")
 
     for timestamp, lum in zip(timestamps, lums):
         series.append(TimeSeriesPoint(timestamp=timestamp, value=lum))
-    request = DetectRequest(series=series, granularity=TimeGranularity.secondly)
-    print('Detecting anomalies in the entire time series.')
+    request = DetectRequest(series=series, granularity='secondly', max_anomaly_ratio=0.25, sensitivity=95)
 
+    response = None
     try:
         response = client.detect_entire_series(request)
-    except AnomalyDetectorError as e:
-        print('Error code: {}'.format(e.error.code), 'Error message: {}'.format(e.error.message))
+    # except AnomalyDetectorError as e:
+    #     print('Error code: {}'.format(e.error.code), 'Error message: {}'.format(e.error.message))
     except Exception as e:
-        print(e)
+        print(e)    
+    except BaseException as e:
+        print (e)
 
-    if any(response.is_anomaly):
-        print('An anomaly was detected at index:')
-        for i, value in enumerate(response.is_anomaly):
-            if value:
-                print(i)
-    else:
+    if response is None or not response.is_anomaly:
         print('No anomalies were detected in the time series.')
-        pass
+        return []
 
-
-def preprocessAnomalyDetectorJson():
-    pass
+    return response.is_anomaly
