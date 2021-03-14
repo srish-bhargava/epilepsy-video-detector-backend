@@ -5,13 +5,13 @@ import os
 import cv2
 from PIL import Image, ImageStat
 import numpy as np
-
+import api
 
 def processVideo(url):
     filepath = downloadVideo(url)
     lums = analyseVideoLuminance(filepath)
     lums = postProcessLuminance(lums)
-    anomalies = getAnomalies(lums)
+    anomalies = api.getAnomalies(lums)
     anomalies = postProcessAnomalies(anomalies)
     changes = getChanges(anomalies)
     changes = getChangesInVideoTime(changes, 60)
@@ -68,10 +68,6 @@ def postProcessLuminance(lums):
         moving_sum = sum(lums_absgrad[max(0, i - sliding_window_size) : i])
         lums_absgrad_movingsum.append(moving_sum)
     return lums_absgrad_movingsum
-
-
-def getAnomalies(lums):
-    pass
 
 
 def postProcessAnomalies(anomalies):

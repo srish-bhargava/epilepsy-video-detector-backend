@@ -3,3 +3,4 @@ numpy
 pytube
 opencv-python
 matplotlib
+azure-ai-anomalydetector
