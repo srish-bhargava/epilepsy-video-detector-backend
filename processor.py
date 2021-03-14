@@ -13,7 +13,9 @@ def processVideo(url):
     lums = postProcessLuminance(lums)
     anomalies = getAnomalies(lums)
     anomalies = postProcessAnomalies(anomalies)
-    return lums
+    changes = getChanges(anomalies)
+    changes = getChangesInVideoTime(changes, 60)
+    return changes
 
 
 def downloadVideo(url): 
@@ -81,3 +83,18 @@ def postProcessAnomalies(anomalies):
         bucket_val = any(anomalies[max(0, i - sliding_window_size) : i])
         anomalies_bucketed.append(bucket_val)
     return anomalies_bucketed
+
+
+def getChanges(anomalies):
+    changes = []
+    prev = None
+    for indx, val in enumerate(anomalies):
+        if prev != val:
+            changes.append([indx, val])
+            prev = val
+    return changes
+
+
+def getChangesInVideoTime(changes, fps):
+    timePerFrame = 1.0/fps
+    return [[change[0]*timePerFrame, change[1]] for change in changes]
