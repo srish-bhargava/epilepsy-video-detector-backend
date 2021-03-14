@@ -1,9 +1,11 @@
 from flask import Flask
 app = Flask(__name__)
 import processor
+from flask import request
 
 
-@app.route('/get_blocked_timestamps')
+@app.route('/get_blocked_timestamps', methods=['POST'])
 def getBlockedTimestamps():
-    processor.processVideo()
+    youtubeUrl = request.args.get('url')
+    processor.processVideo(youtubeUrl)
     return 'Its working'
