@@ -1,12 +1,12 @@
 from pytube import YouTube
+import constants
 
 def processVideo(url):
     downloadVideo(url)
     return None
 
-def downloadVideo(url):
-    SAVE_PATH = "./" 
+def downloadVideo(url): 
     yt = YouTube(url)
     stream = yt.streams.first()
-    stream.download(SAVE_PATH)
+    stream.download(constants.VIDEO_DIRECTORY)
 
