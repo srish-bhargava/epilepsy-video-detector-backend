@@ -53,6 +53,7 @@ def analyseVideoLuminance(filepath):
 
     return lums
 
+
 def postProcessLuminance(lums):
     lums_grad = np.gradient(lums)
     lums_absgrad = abs(lums_grad)
@@ -66,8 +67,10 @@ def postProcessLuminance(lums):
         lums_absgrad_movingsum.append(moving_sum)
     return lums_absgrad_movingsum
 
-def getAnomalies(anomalies):
+
+def getAnomalies(lums):
     pass
+
 
 def postProcessAnomalies(anomalies):
     anomalies_bucketed = []
