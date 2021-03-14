@@ -4,11 +4,15 @@ import hashlib
 import os
 import cv2
 from PIL import Image, ImageStat
+import numpy as np
+
 
 def processVideo(url):
     filepath = downloadVideo(url)
     lums = analyseVideoLuminance(filepath)
-    return None
+    lums = postProcessLuminance(lums)
+    anomalies = getAnomalies(lums)
+    return lums
 
 
 def downloadVideo(url): 
@@ -48,3 +52,18 @@ def analyseVideoLuminance(filepath):
 
     return lums
 
+def postProcessLuminance(lums):
+    lums_grad = np.gradient(lums)
+    lums_absgrad = abs(lums_grad)
+    
+    sliding_window_size = 60
+    num_points = len(lums_absgrad)
+    
+    lums_absgrad_movingsum = []
+    for i in range(num_points):
+        moving_sum = sum(lums_absgrad[max(0, i - sliding_window_size) : i])
+        lums_absgrad_movingsum.append(moving_sum)
+    return lums_absgrad_movingsum
+
+def getAnomalies(lums):
+    pass

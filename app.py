@@ -14,8 +14,10 @@ def init():
 @app.route('/get_blocked_timestamps', methods=['POST'])
 def getBlockedTimestamps():
     youtubeUrl = request.args.get('url')
-    processor.processVideo(youtubeUrl)
-    return 'Its working'
+    result = processor.processVideo(youtubeUrl)
+    return {
+        "result": result
+    }
 
 
 init()
