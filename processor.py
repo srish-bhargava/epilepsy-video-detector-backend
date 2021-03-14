@@ -10,11 +10,11 @@ import api
 def processVideo(url):
     filepath = downloadVideo(url)
     lums = analyseVideoLuminance(filepath)
-    lums = postProcessLuminance(lums)
+    lums = postProcessLuminance(lums, 30)
     anomalies = api.getAnomalies(lums)
-    anomalies = postProcessAnomalies(anomalies)
+    anomalies = postProcessAnomalies(anomalies, 30)
     changes = getChanges(anomalies)
-    changes = getChangesInVideoTime(changes, 60)
+    changes = getChangesInVideoTime(changes, 30)
     return changes
 
 
@@ -26,7 +26,7 @@ def downloadVideo(url):
         return filepath + ".mp4"
 
     yt = YouTube(url)
-    stream = yt.streams.first()
+    stream = yt.streams.filter(fps=30).first()
     stream.download(constants.VIDEO_DIRECTORY, filename)
     return filepath+".mp4"
 
@@ -56,11 +56,11 @@ def analyseVideoLuminance(filepath):
     return lums
 
 
-def postProcessLuminance(lums):
+def postProcessLuminance(lums, fps):
     lums_grad = np.gradient(lums)
     lums_absgrad = abs(lums_grad)
     
-    sliding_window_size = 60
+    sliding_window_size = fps
     num_points = len(lums_absgrad)
     
     lums_absgrad_movingsum = []
@@ -70,9 +70,9 @@ def postProcessLuminance(lums):
     return lums_absgrad_movingsum
 
 
-def postProcessAnomalies(anomalies):
+def postProcessAnomalies(anomalies, fps):
     anomalies_bucketed = []
-    sliding_window_size = 30
+    sliding_window_size = fps//2
     num_points = len(anomalies)
     
     for i in range(num_points):
