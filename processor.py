@@ -12,6 +12,7 @@ def processVideo(url):
     lums = analyseVideoLuminance(filepath)
     lums = postProcessLuminance(lums)
     anomalies = getAnomalies(lums)
+    anomalies = postProcessAnomalies(anomalies)
     return lums
 
 
@@ -65,5 +66,8 @@ def postProcessLuminance(lums):
         lums_absgrad_movingsum.append(moving_sum)
     return lums_absgrad_movingsum
 
-def getAnomalies(lums):
+def getAnomalies(anomalies):
+    pass
+
+def postProcessAnomalies(anomalies):
     pass
