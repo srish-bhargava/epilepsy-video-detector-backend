@@ -70,4 +70,11 @@ def getAnomalies(anomalies):
     pass
 
 def postProcessAnomalies(anomalies):
-    pass
+    anomalies_bucketed = []
+    sliding_window_size = 30
+    num_points = len(anomalies)
+    
+    for i in range(num_points):
+        bucket_val = any(anomalies[max(0, i - sliding_window_size) : i])
+        anomalies_bucketed.append(bucket_val)
+    return anomalies_bucketed
