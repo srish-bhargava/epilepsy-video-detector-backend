@@ -1,4 +1,4 @@
-# epilepsy-video-detector-backend
+# SeizureSaviour
 
 ## Inspiration
 About 3.4 million people in the United States suffer from Epilepsy.  Epilepsy is a disorder in which nerve cell activity in the brain is disturbed, causing seizures.  One of the primary causes of these photosensitive seizures are due to viewing video content that have fast changing colors of strobing lights or fast-paced graphics. Often such video content contains "Seizure Warnings" but no measures have been taken to actually prevent these seizures in people suffering from Photosensitive Epilepsy. 
