@@ -20,7 +20,7 @@ def getAnomalies(lums):
 
     for timestamp, lum in zip(timestamps, lums):
         series.append(TimeSeriesPoint(timestamp=timestamp, value=lum))
-    request = DetectRequest(series=series, granularity='secondly', max_anomaly_ratio=0.25, sensitivity=95)
+    request = DetectRequest(series=series, granularity='secondly', max_anomaly_ratio=0.49, sensitivity=95)
 
     response = None
     try:

@@ -4,3 +4,5 @@ pytube
 opencv-python
 matplotlib
 azure-ai-anomalydetector
+pyopenssl
+flask-cors

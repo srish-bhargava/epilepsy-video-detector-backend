@@ -1,9 +1,13 @@
 from flask import Flask
-app = Flask(__name__)
 import processor
 import constants
 from flask import request
 import os
+from flask_cors import CORS
+
+
+app = Flask(__name__)
+CORS(app)
 
 
 def init():
@@ -20,4 +24,7 @@ def getBlockedTimestamps():
     }
 
 
-init()
+
+if __name__ == "__main__":
+    init()
+    app.run(ssl_context='adhoc')

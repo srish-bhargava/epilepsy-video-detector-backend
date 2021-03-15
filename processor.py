@@ -59,20 +59,25 @@ def analyseVideoLuminance(filepath):
 def postProcessLuminance(lums, fps):
     lums_grad = np.gradient(lums)
     lums_absgrad = abs(lums_grad)
+
+    avg = sum(lums_absgrad)/len(lums_absgrad)
+    lums_thresh_absgrad = [max(avg, val) for val in lums_absgrad]
+
+
     
-    sliding_window_size = fps
-    num_points = len(lums_absgrad)
+    sliding_window_size = fps//2
+    num_points = len(lums_thresh_absgrad)
     
-    lums_absgrad_movingsum = []
+    lums_thresh_absgrad_movingsum = []
     for i in range(num_points):
-        moving_sum = sum(lums_absgrad[max(0, i - sliding_window_size) : i])
-        lums_absgrad_movingsum.append(moving_sum)
-    return lums_absgrad_movingsum
+        moving_sum = sum(lums_thresh_absgrad[max(0, i - sliding_window_size//2) : i + 1 + sliding_window_size//2])
+        lums_thresh_absgrad_movingsum.append(moving_sum)
+    return lums_thresh_absgrad_movingsum
 
 
 def postProcessAnomalies(anomalies, fps):
     anomalies_bucketed = []
-    sliding_window_size = fps//2
+    sliding_window_size = fps
     num_points = len(anomalies)
     
     for i in range(num_points):
