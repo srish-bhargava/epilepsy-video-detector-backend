@@ -12,6 +12,7 @@ def processVideo(url):
     lums = analyseVideoLuminance(filepath)
     lums = postProcessLuminance(lums, 30)
     anomalies = api.getAnomalies(lums)
+    print(anomalies)
     anomalies = postProcessAnomalies(anomalies, 30)
     changes = getChanges(anomalies)
     changes = getChangesInVideoTime(changes, 30)
@@ -61,11 +62,11 @@ def postProcessLuminance(lums, fps):
     lums_absgrad = abs(lums_grad)
 
     avg = sum(lums_absgrad)/len(lums_absgrad)
-    lums_thresh_absgrad = [max(avg, val) for val in lums_absgrad]
+    lums_thresh_absgrad = [max(avg, val)-avg for val in lums_absgrad]
 
 
     
-    sliding_window_size = fps//2
+    sliding_window_size = 5
     num_points = len(lums_thresh_absgrad)
     
     lums_thresh_absgrad_movingsum = []
@@ -77,7 +78,7 @@ def postProcessLuminance(lums, fps):
 
 def postProcessAnomalies(anomalies, fps):
     anomalies_bucketed = []
-    sliding_window_size = fps
+    sliding_window_size = 10
     num_points = len(anomalies)
     
     for i in range(num_points):
