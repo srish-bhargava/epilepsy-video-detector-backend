@@ -6,12 +6,16 @@ from azure.core.credentials import AzureKeyCredential
 import pandas as pd
 
 
-SUBSCRIPTION_KEY = os.environ["ANOMALY_DETECTOR_KEY"]
-ANOMALY_DETECTOR_ENDPOINT = os.environ["ANOMALY_DETECTOR_ENDPOINT"]
 
-client = AnomalyDetectorClient(AzureKeyCredential(SUBSCRIPTION_KEY), ANOMALY_DETECTOR_ENDPOINT)
+CLIENT = None
 
 def getAnomalies(lums):
+    global CLIENT
+    if CLIENT == None:
+        SUBSCRIPTION_KEY = os.environ["ANOMALY_DETECTOR_KEY"]
+        ANOMALY_DETECTOR_ENDPOINT = os.environ["ANOMALY_DETECTOR_ENDPOINT"]
+        CLIENT = AnomalyDetectorClient(AzureKeyCredential(SUBSCRIPTION_KEY), ANOMALY_DETECTOR_ENDPOINT)
+
     series = []
     timestamps = []
     
@@ -24,7 +28,7 @@ def getAnomalies(lums):
 
     response = None
     try:
-        response = client.detect_entire_series(request)
+        response = CLIENT.detect_entire_series(request)
     # except AnomalyDetectorError as e:
     #     print('Error code: {}'.format(e.error.code), 'Error message: {}'.format(e.error.message))
     except Exception as e:

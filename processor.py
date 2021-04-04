@@ -7,11 +7,15 @@ from PIL import Image, ImageStat
 import numpy as np
 import api
 
-def processVideo(url):
+
+def processVideo(url, anomalyDetector = 'local'):
     filepath = downloadVideo(url)
     lums = analyseVideoLuminance(filepath)
     lums = postProcessLuminance(lums, 30)
-    anomalies = api.getAnomalies(lums)
+    if anomalyDetector == 'azure':
+        anomalies = api.getAnomalies(lums)
+    elif anomalyDetector == 'local':
+        anomalies = getAnomalies(lums)
     print(anomalies)
     anomalies = postProcessAnomalies(anomalies, 30)
     changes = getChanges(anomalies)
@@ -74,6 +78,11 @@ def postProcessLuminance(lums, fps):
         moving_sum = sum(lums_thresh_absgrad[max(0, i - sliding_window_size//2) : i + 1 + sliding_window_size//2])
         lums_thresh_absgrad_movingsum.append(moving_sum)
     return lums_thresh_absgrad_movingsum
+
+def getAnomalies(lums):
+    # threshVal = sum(lums)/len(lums)*1.5
+    threshVal = 15
+    return [val>threshVal for val in lums]
 
 
 def postProcessAnomalies(anomalies, fps):
